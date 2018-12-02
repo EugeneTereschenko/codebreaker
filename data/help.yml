@@ -1,0 +1,40 @@
+---
+rulegame: |-
+  You have to guess 4-digit number where each digit placed between 1 and 6.
+  The code-maker then marks the guess with up to four + and - signs.
+  A + indicates an exact match: one of the numbers in the guess is the same.
+  A - indicates a number match: one of the numbers in the guess is the same as one of the numbers in the secret code but in a different position.
+wel_instruct: |-
+  Type 'start' for starting new game.
+  Type 'rules' for showing rules.
+  Type 'stats' for showing statistics.
+  Type 'exit' for exit
+choose_difficulty: |-
+  Choose the difficulty level from easy medium hard
+username: |-
+  What is your name?
+  Enter please
+question_num: |-
+  Put the number. Attempts remain - %s You can choose hint - %s
+invalid_number: |-
+  Put 4-digital number
+over_hint: |- 
+  You don't have any hints
+win: |-
+  your win
+progress: |-
+  Enter yes if you want to save your progress
+lose: |-
+  Your lose
+code_was: |-
+  Secret code was
+new_game: |-
+  Enter yes if you want a new game
+hello: |-
+  Hello, your name is 
+empty_stat: |-
+  You are the first one
+stats: |-
+  Stats
+col_table: |-
+  Rating Name Difficulty Attempts Total Attempts Used Hints Total Hints Used
