@@ -5,13 +5,17 @@ class Game
   attr_reader :attempts, :attempts_used, :hints, :hints_used, :levels, :name, :level_num
   attr_reader :arr_index, :result
   attr_accessor :user_code, :secret_code, :phrases
-  def initialize
-    phrases_db = Db.new('./data/help.yml')
-    @phrases = phrases_db.read_database
-  end
+
+  GAME_LEVELS = {
+    easy: { attempts: 30, hints: 3, level_num: 0 },
+    medium: { attempts: 15, hints: 2, level_num: 1 },
+    hard: { attempts: 10, hints: 1, level_num: 2 }
+  }.freeze
+
+  def initialize; end
 
   def new_game
-    puts @phrases['choose_difficulty']
+    puts I18n.t :choose_difficulty
     @levels = gets.chomp
     new_game unless choose_level
     new_code
@@ -28,21 +32,16 @@ class Game
   def choose_level
     return unless validate_level(@levels)
 
-    level_game = {
-      easy: { attempts: 30, hints: 3, level_num: 0 },
-      medium: { attempts: 15, hints: 2, level_num: 1 },
-      hard: { attempts: 10, hints: 1, level_num: 2 }
-    }
-    @attempts = level_game.dig(levels.to_sym, :attempts)
-    @hints = level_game.dig(levels.to_sym, :hints)
-    @level_num = level_game.dig(levels.to_sym, :level_num)
+    @attempts = GAME_LEVELS.dig(levels.to_sym, :attempts)
+    @hints = GAME_LEVELS.dig(levels.to_sym, :hints)
+    @level_num = GAME_LEVELS.dig(levels.to_sym, :level_num)
     @arr_index = (0..3).to_a.sample @hints
   end
 
   def choose_name
-    puts @phrases['username']
+    puts I18n.t :username
     @name = $stdin.gets.chomp
-    puts @phrases['hello'] + @name
+    puts I18n.t(:hello) + @name
     return if validate_name(@name)
 
     choose_name
@@ -50,12 +49,12 @@ class Game
 
   def round_game
     if @attempts.positive?
-      puts format(@phrases['question_num'], @attempts, @hints)
+      puts format(I18n.t(:question_num), @attempts, @hints)
       @attempts -= 1
       @attempts_used += 1
       user_answer = gets.chomp
       hint_show if user_answer == 'hint'
-      puts @phrases['invalid_number'] unless validate_answer(user_answer)
+      puts I18n.t(:invalid_number) unless validate_answer(user_answer)
       @user_code = user_answer.each_char.map(&:to_i)
       if check_code(user_answer)
         win
@@ -87,7 +86,7 @@ class Game
 
   def hint_show
     if hints.zero?
-      puts @phrases['over_hint']
+      puts I18n.t :over_hint
       round_game
     end
     secret_code.map.with_index do |element, index|
@@ -107,8 +106,8 @@ class Game
     db = Db.new
     codebreaker_data = db.read_database
     puts game_result
-    puts @phrases['win']
-    puts @phrases['progress']
+    puts I18n.t :win
+    puts I18n.t :progress
     your_want_save = gets.chomp
     if your_want_save.eql? 'yes'
       hash_stat = { name: @name, level: @levels, level_num: @level_num, attempts: @attempts, attempts_used: @attempts_used, hints: @hints, hints_used: @hints_used }
@@ -116,20 +115,20 @@ class Game
       codebreaker_data << hash_stat
       db.write_database(codebreaker_data)
     end
-    puts @phrases['new_game']
+    puts I18n.t :new_game
     your_want_new_game = gets.chomp
     exit unless your_want_new_game.eql? 'yes'
     new_game if your_want_new_game.eql? 'yes'
   end
 
   def loose
-    puts @phrases['lose']
-    puts @phrases['code_was']
+    puts I18n.t :lose
+    puts I18n.t :code_was
     @secret_code.each do |value|
       print value
     end
     puts
-    puts @phrases['new_game']
+    puts I18n.t :new_game
     your_want_new_game = gets.chomp
     exit unless your_want_new_game.eql? 'yes'
     new_game if your_want_new_game.eql? 'yes'
@@ -138,9 +137,10 @@ class Game
   def stats
     db = Db.new
     codebreaker_data = db.read_database
-    puts @phrases['empty_stat'] unless codebreaker_data
-    puts @phrases['stats']
-    puts @phrases['col_table']
+    return puts I18n.t(:empty_stat) unless codebreaker_data
+
+    puts I18n.t :stats
+    puts I18n.t :col_table
     raiting = 0
     codebreaker_data.sort_by! { |stat| [stat[:level_num], stat[:hints], stat[:attempts]] }
     codebreaker_data.each do |stat|

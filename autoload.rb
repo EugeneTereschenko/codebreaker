@@ -1,3 +1,5 @@
+require 'i18n'
+require './lib/localization.rb'
 require './lib/validation.rb'
 require './database/db.rb'
 require 'yaml'
