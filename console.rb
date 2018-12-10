@@ -97,7 +97,7 @@ class Console
     message(:progress)
     your_want_save = read_from_console
     if your_want_save.eql? 'yes'
-      hash_stat = { name: @name, level: @levels, level_num: @level_num, attempts: @attempts, attempts_used: @attempts_used, hints: @hints, hints_used: @hints_used }
+      hash_stat = { name: @game.name, level: @game.levels, level_num: @game.level_num, attempts: @game.attempts, attempts_used: @game.attempts_used, hints: @game.hints, hints_used: @game.hints_used }
       codebreaker_data = [] if codebreaker_data.nil?
       codebreaker_data << hash_stat
       db.write_database(codebreaker_data)
@@ -136,7 +136,7 @@ class Console
     message(:stats)
     message(:col_table)
     raiting = 0
-    codebreaker_data.sort_by! { |stat| [stat[:level_num], stat[:hints], stat[:attempts]] }
+    codebreaker_data.sort_by! { |stat| [stat[@game.level_num], stat[@game.hints], stat[@game.attempts]] }
     codebreaker_data.each do |stat|
       raiting += 1
       print "#{raiting}\t"

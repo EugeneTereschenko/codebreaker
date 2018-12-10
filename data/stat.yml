@@ -34,10 +34,24 @@
   :attempts_used: 
   :hints: 
   :hints_used: 
-- :name: 
-  :level: 
-  :level_num: 
-  :attempts: 
-  :attempts_used: 
-  :hints: 
-  :hints_used: 
+- :name: asdasd
+  :level: easy
+  :level_num: 0
+  :attempts: 23
+  :attempts_used: 7
+  :hints: 0
+  :hints_used: 2
+- :name: asdasd
+  :level: easy
+  :level_num: 0
+  :attempts: 19
+  :attempts_used: 11
+  :hints: 0
+  :hints_used: 2
+- :name: asdasd
+  :level: easy
+  :level_num: 0
+  :attempts: 23
+  :attempts_used: 7
+  :hints: 0
+  :hints_used: 2

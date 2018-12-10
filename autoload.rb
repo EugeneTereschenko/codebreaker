@@ -1,7 +1,7 @@
+require './database/db.rb'
 require 'i18n'
 require './lib/localization.rb'
 require './lib/validation.rb'
-require './database/db.rb'
 require 'yaml'
 require './console.rb'
 require './lib/game.rb'
