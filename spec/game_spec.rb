@@ -1,6 +1,4 @@
 # spec/game_spec.rb
-require './autoload.rb'
-require './lib/game.rb'
 
 RSpec.describe Game do
   subject { Game.new }
@@ -9,28 +7,28 @@ RSpec.describe Game do
     let(:secret_code) { subject.secret_code }
 
     it 'returns secret code' do
-      subject.new_code
+      subject.new_game
       expect(subject.secret_code).to be_kind_of(Array)
     end
 
     it 'has 4 digit' do
-      subject.new_code
+      subject.new_game
       expect(subject.secret_code.size).to eq(4)
     end
 
     it 'has only digits between 1 and 6' do
-      subject.new_code
+      subject.new_game
       expect(subject.secret_code.join).to match(/^[1-6]{4}$/)
     end
 
     it 'attempts_used = 0 hints_used = 0' do
-      subject.new_code
+      subject.new_game
       expect(subject.attempts_used).to eq(0)
       expect(subject.hints_used).to eq(0)
     end
 
     it 'user_code is empty' do
-      subject.new_code
+      subject.new_game
       expect(subject.user_code).to be_kind_of(Array)
       expect(subject.user_code.size).to eq(0)
     end
@@ -84,22 +82,19 @@ RSpec.describe Game do
 
   context '#choose_level' do
     it 'test hard' do
-      subject.instance_variable_set(:@levels, 'hard')
-      subject.choose_level
+      subject.choose_level('hard')
       expect(subject.attempts).to eq(10)
       expect(subject.hints).to eq(1)
     end
 
     it 'test medium' do
-      subject.instance_variable_set(:@levels, 'medium')
-      subject.choose_level
+      subject.choose_level('medium')
       expect(subject.attempts).to eq(15)
       expect(subject.hints).to eq(2)
     end
 
     it 'test easy' do
-      subject.instance_variable_set(:@levels, 'easy')
-      subject.choose_level
+      subject.choose_level('easy')
       expect(subject.attempts).to eq(30)
       expect(subject.hints).to eq(3)
     end
