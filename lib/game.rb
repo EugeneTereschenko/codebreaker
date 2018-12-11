@@ -24,6 +24,7 @@ class Game
   def choose_level(levels)
     @levels = levels
     return unless validate_level(@levels)
+
     @attempts = GAME_LEVELS.dig(levels.to_sym, :attempts)
     @hints = GAME_LEVELS.dig(levels.to_sym, :hints)
     @level_num = GAME_LEVELS.dig(levels.to_sym, :level_num)
@@ -60,8 +61,18 @@ class Game
   def stats
     db = Db.new
     codebreaker_data = db.read_database
+    
     return false unless codebreaker_data
     codebreaker_data.sort_by! { |stat| [stat[:level_num], stat[:hints], stat[:attempts]] }
+  end
+
+  def win_save
+    db = Db.new
+    codebreaker_data = db.read_database
+    hash_stat = { name: @name, level: @levels, level_num: @level_num, attempts: @attempts, attempts_used: @attempts_used, hints: @hints, hints_used: @hints_used }
+    codebreaker_data = [] if codebreaker_data.nil?
+    codebreaker_data << hash_stat
+    db.write_database(codebreaker_data)
   end
 
 end

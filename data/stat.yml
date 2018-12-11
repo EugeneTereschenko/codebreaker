@@ -55,3 +55,45 @@
   :attempts_used: 9
   :hints: 0
   :hints_used: 2
+- :name: adfasdf
+  :level: easy
+  :level_num: 0
+  :attempts: 24
+  :attempts_used: 6
+  :hints: 0
+  :hints_used: 2
+- :name: Testsave
+  :level: easy
+  :level_num: 0
+  :attempts: 23
+  :attempts_used: 7
+  :hints: 0
+  :hints_used: 2
+- :name: TestCOOL
+  :level: easy
+  :level_num: 0
+  :attempts: 25
+  :attempts_used: 5
+  :hints: 0
+  :hints_used: 2
+- :name: TestGame
+  :level: easy
+  :level_num: 0
+  :attempts: 24
+  :attempts_used: 6
+  :hints: 0
+  :hints_used: 2
+- :name: TestGame
+  :level: easy
+  :level_num: 0
+  :attempts: 22
+  :attempts_used: 8
+  :hints: 0
+  :hints_used: 2
+- :name: NameTest
+  :level: medium
+  :level_num: 1
+  :attempts: 5
+  :attempts_used: 10
+  :hints: 0
+  :hints_used: 1

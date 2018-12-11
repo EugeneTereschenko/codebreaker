@@ -22,36 +22,6 @@ class Console
     end
   end
 
-  private
-
-  def choose_name
-    message(:username)
-    name = read_from_console
-    message_var(:hello, name)
-    return choose_name unless @game.choose_name(name)
-  end
-
-  def input_level
-    message(:choose_difficulty)
-    return input_level unless @game.choose_level(read_from_console)
-  end
-
-  def message(msg)
-    puts I18n.t msg
-  end
-
-  def message_var(msg, var)
-    puts I18n.t(msg) + var
-  end
-
-  def message_return(msg)
-    I18n.t(msg)
-  end
-
-  def read_from_console
-    gets.chomp
-  end
-
   def round_game
     if @game.attempts.positive?
       puts format(message_return(:question_num), @game.attempts, @game.hints)
@@ -90,26 +60,14 @@ class Console
   end
 
   def win
-    db = Db.new
-    codebreaker_data = db.read_database
     puts @game.game_result
     message(:win)
     message(:progress)
     your_want_save = read_from_console
     if your_want_save.eql? 'yes'
-      hash_stat = { name: @game.name, level: @game.levels, level_num: @game.level_num, attempts: @game.attempts, attempts_used: @game.attempts_used, hints: @game.hints, hints_used: @game.hints_used }
-      codebreaker_data = [] if codebreaker_data.nil?
-      codebreaker_data << hash_stat
-      db.write_database(codebreaker_data)
+      @game.win_save
     end
-    message(:new_game)
-    your_want_new_game = read_from_console
-    exit unless your_want_new_game.eql? 'yes'
-    if your_want_new_game.eql? 'yes'
-      input_level
-      @game.new_game
-      round_game
-    end
+    restart_game
   end
 
   def loose
@@ -119,6 +77,10 @@ class Console
       print value
     end
     puts
+    restart_game
+  end
+
+  def restart_game
     message(:new_game)
     your_want_new_game = read_from_console
     exit unless your_want_new_game.eql? 'yes'
@@ -142,10 +104,42 @@ class Console
         print "#{raiting}\t"
         stat.each do |key, value|
           next if key.eql?('level_num')
+
           print "#{value}\t"
         end
         print "\n"
       end
     end
   end
+
+  private
+
+  def message(msg)
+    puts I18n.t msg
+  end
+
+  def message_var(msg, var)
+    puts I18n.t(msg) + var
+  end
+
+  def message_return(msg)
+    I18n.t(msg)
+  end
+
+  def read_from_console
+    gets.chomp
+  end
+
+  def choose_name
+    message(:username)
+    name = read_from_console
+    message_var(:hello, name)
+    return choose_name unless @game.choose_name(name)
+  end
+
+  def input_level
+    message(:choose_difficulty)
+    return input_level unless @game.choose_level(read_from_console)
+  end
+
 end
