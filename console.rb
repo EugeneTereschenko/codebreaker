@@ -16,7 +16,7 @@ class Console
         round_game
       when 'rules' then
         message(:rulegame)
-      when 'stats' then stats
+      when 'stats' then stats_show
       when 'exit' then exit
       end
     end
@@ -70,7 +70,7 @@ class Console
       loose
     end
   end
-  
+
   def hint_show
     if @game.hints.zero?
       message(:over_hint)
@@ -107,7 +107,7 @@ class Console
     exit unless your_want_new_game.eql? 'yes'
     if your_want_new_game.eql? 'yes'
       input_level
-      @game.new_game 
+      @game.new_game
       round_game
     end
   end
@@ -124,28 +124,28 @@ class Console
     exit unless your_want_new_game.eql? 'yes'
     if your_want_new_game.eql? 'yes'
       input_level
-      @game.new_game 
+      @game.new_game
       round_game
     end
   end
 
-  def stats
-    db = Db.new
-    codebreaker_data = db.read_database
-    return message(:empty_stat) unless codebreaker_data
-    message(:stats)
-    message(:col_table)
-    raiting = 0
-    codebreaker_data.sort_by! { |stat| [stat[@game.level_num], stat[@game.hints], stat[@game.attempts]] }
-    codebreaker_data.each do |stat|
-      raiting += 1
-      print "#{raiting}\t"
-      stat.each do |key, value|
-        next if key.eql?('level_num')
-
-        print "#{value}\t"
+  def stats_show
+    data = @game.stats
+    if data.eql?(false)
+      message(:empty_stat)
+    else
+      message(:stats)
+      message(:col_table)
+      raiting = 0
+      data.each do |stat|
+        raiting += 1
+        print "#{raiting}\t"
+        stat.each do |key, value|
+          next if key.eql?('level_num')
+          print "#{value}\t"
+        end
+        print "\n"
       end
-      print "\n"
     end
   end
 end

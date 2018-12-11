@@ -56,4 +56,12 @@ class Game
     end
     result
   end
+
+  def stats
+    db = Db.new
+    codebreaker_data = db.read_database
+    return false unless codebreaker_data
+    codebreaker_data.sort_by! { |stat| [stat[:level_num], stat[:hints], stat[:attempts]] }
+  end
+
 end

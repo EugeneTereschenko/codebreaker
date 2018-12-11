@@ -27,13 +27,6 @@
   :attempts_used: 5
   :hints: 0
   :hints_used: 0
-- :name: 
-  :level: 
-  :level_num: 
-  :attempts: 
-  :attempts_used: 
-  :hints: 
-  :hints_used: 
 - :name: asdasd
   :level: easy
   :level_num: 0
@@ -53,5 +46,12 @@
   :level_num: 0
   :attempts: 23
   :attempts_used: 7
+  :hints: 0
+  :hints_used: 2
+- :name: asdfasdf
+  :level: easy
+  :level_num: 0
+  :attempts: 21
+  :attempts_used: 9
   :hints: 0
   :hints_used: 2
