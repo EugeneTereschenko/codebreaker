@@ -6,7 +6,7 @@ class Db
   end
 
   def read_database
-    YAML.load_file(@path_to_file, nil) if File.exist?(@path_to_file)
+    YAML.load_file(@path_to_file) if File.exist?(@path_to_file)
   end
 
   def write_database(library)

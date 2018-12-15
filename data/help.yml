@@ -17,7 +17,7 @@ en:
     What is your name?
     Enter please
   question_num: |
-    Put the number. Attempts remain - %s You can choose hint - %s
+    Put the number. Attempts remain - %{attempts} You can choose hint - %{hints}
   invalid_number: |
     Put 4-digital number
   over_hint: |
@@ -28,12 +28,10 @@ en:
     Enter yes if you want to save your progress
   lose: |
     Your lose
-  code_was: |
-    Secret code was
   new_game: |
     Enter yes if you want a new game
   hello: |
-    Hello, your name is 
+    Hello, your name is %{name}
   empty_stat: |
     You are the first one
   stats: |

@@ -2,9 +2,9 @@
 
 class Game
   include Validation
-  attr_accessor :attempts, :attempts_used, :hints, :hints_used, :levels, :name, :level_num
-  attr_accessor :arr_index, :result
-  attr_accessor :user_code, :secret_code, :phrases
+  attr_reader :attempts, :hints, :levels, :name, :level_num
+  attr_reader :arr_index, :result
+  attr_reader :user_code, :secret_code, :phrases
 
   GAME_LEVELS = {
     easy: { attempts: 30, hints: 3, level_num: 0 },
@@ -17,13 +17,15 @@ class Game
   def new_game
     @secret_code = Array.new(DIGITS_COUNT) { rand(1..6) }
     @user_code = []
-    @attempts_used = 0
-    @hints_used = 0
   end
 
-  def choose_level(levels)
+  def take_user_code(enter_code)
+    @user_code = enter_code.each_char.map(&:to_i)
+  end
+
+  def enter_level(levels)
+    return unless validate_level(levels)
     @levels = levels
-    return unless validate_level(@levels)
 
     @attempts = GAME_LEVELS.dig(levels.to_sym, :attempts)
     @hints = GAME_LEVELS.dig(levels.to_sym, :hints)
@@ -31,18 +33,21 @@ class Game
     @arr_index = (0..3).to_a.sample @hints
   end
 
-  def choose_name(name)
+  def enter_name(name)
+    return unless validate_name(name)
     @name = name
-    validate_name(@name)
   end
 
-  def check_code(user_answer)
+  def test_code(user_answer)
     secret_code.join == user_answer
   end
 
   def take_attempts
     @attempts -= 1
-    @attempts_used += 1
+  end
+
+  def take_hints
+    @hints -= 1 if @hints > 0
   end
 
   def game_result
@@ -62,15 +67,17 @@ class Game
     db = Db.new
     codebreaker_data = db.read_database
     
-    return false unless codebreaker_data
+    return unless codebreaker_data
     codebreaker_data.sort_by! { |stat| [stat[:level_num], stat[:hints], stat[:attempts]] }
+    codebreaker_data.each { |stat| stat.delete_if {|key, value| key == :level_num} }
   end
 
   def win_save
     db = Db.new
-    codebreaker_data = db.read_database
-    hash_stat = { name: @name, level: @levels, level_num: @level_num, attempts: @attempts, attempts_used: @attempts_used, hints: @hints, hints_used: @hints_used }
-    codebreaker_data = [] if codebreaker_data.nil?
+    codebreaker_data = db.read_database || []
+    attempts_used = GAME_LEVELS.dig(levels.to_sym, :attempts) - attempts
+    hints_used = GAME_LEVELS.dig(levels.to_sym, :hints) - hints
+    hash_stat = { name: @name, level: @levels, level_num: @level_num, attempts: @attempts, attempts_used: attempts_used, hints: @hints, hints_used: hints_used }
     codebreaker_data << hash_stat
     db.write_database(codebreaker_data)
   end

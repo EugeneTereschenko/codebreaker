@@ -1,4 +1,6 @@
 class Console
+  YES = 'yes'.freeze
+
   def initialize
     @game = Game.new
   end
@@ -8,36 +10,37 @@ class Console
       message(:start_game)
       message(:wel_instruct)
       answer = read_from_console
-      case answer
-      when 'start' then
-        choose_name
-        input_level
-        @game.new_game
-        round_game
-      when 'rules' then
-        message(:rulegame)
-      when 'stats' then stats_show
-      when 'exit' then exit
-      end
+      check_answer(answer)
+    end
+  end
+
+  def check_answer(answer)
+    case answer
+    when 'start' then
+      enter_name
+      enter_level
+      @game.new_game
+      round_game
+    when 'rules' then
+      message(:rulegame)
+    when 'stats' then stats_show
+    when 'exit' then exit
     end
   end
 
   def round_game
-    if @game.attempts.positive?
-      puts format(message_return(:question_num), @game.attempts, @game.hints)
-      @game.take_attempts
-      user_answer = read_from_console
-      hint_show if user_answer == 'hint'
-      message(:invalid_number) unless @game.validate_answer(user_answer)
-      @game.user_code = user_answer.each_char.map(&:to_i)
-      if @game.check_code(user_answer)
-        win
-      else
-        puts @game.game_result
-        round_game
-      end
+    loose if @game.attempts.zero?
+    message(:question_num, attempts: @game.attempts, hints: @game.hints)
+    user_answer = read_from_console
+    hint_show if user_answer == 'hint'
+    message(:invalid_number) unless @game.validate_answer(user_answer)
+    @game.take_attempts
+    @game.take_user_code(user_answer)
+    if @game.test_code(user_answer)
+      win
     else
-      loose
+      puts @game.game_result
+      round_game
     end
   end
 
@@ -47,99 +50,69 @@ class Console
       round_game
     end
     @game.secret_code.map.with_index do |element, index|
-      if index == @game.arr_index[@game.hints - 1]
-        print element
-      else
-        print '*'
-      end
+      print element if index == @game.arr_index[@game.hints - 1]
     end
     print "\n"
-    @game.hints -= 1 if @game.hints > 0
-    @game.hints_used += 1 if @game.hints > 0
+    @game.take_hints
     round_game
   end
 
   def win
-    puts @game.game_result
     message(:win)
     message(:progress)
-    your_want_save = read_from_console
-    if your_want_save.eql? 'yes'
-      @game.win_save
-    end
+    @game.win_save if read_from_console.eql? YES
     restart_game
   end
 
   def loose
     message(:lose)
-    message(:code_was)
-    @game.secret_code.each do |value|
-      print value
-    end
-    puts
     restart_game
   end
 
   def restart_game
     message(:new_game)
-    your_want_new_game = read_from_console
-    exit unless your_want_new_game.eql? 'yes'
-    if your_want_new_game.eql? 'yes'
-      input_level
-      @game.new_game
-      round_game
-    end
+    exit unless read_from_console.eql? YES
+    enter_level
+    @game.new_game
+    round_game
   end
 
   def stats_show
     data = @game.stats
-    if data.eql?(false)
-      message(:empty_stat)
-    else
-      message(:stats)
-      message(:col_table)
-      raiting = 0
-      data.each do |stat|
-        raiting += 1
-        print "#{raiting}\t"
-        stat.each do |key, value|
-          next if key.eql?('level_num')
 
-          print "#{value}\t"
-        end
-        print "\n"
+    return message(:empty_stat) unless data
+
+    message(:stats)
+    message(:col_table)
+    raiting = 0
+    data.each_with_index do |val, index|
+      print "#{index}\t"
+      val.each do |_key, value|
+        print "#{value}\t"
       end
+      print "\n"
     end
   end
 
   private
 
-  def message(msg)
-    puts I18n.t msg
-  end
-
-  def message_var(msg, var)
-    puts I18n.t(msg) + var
-  end
-
-  def message_return(msg)
-    I18n.t(msg)
+  def message(msg, params = {})
+    puts I18n.t(msg, params)
   end
 
   def read_from_console
     gets.chomp
   end
 
-  def choose_name
+  def enter_name
     message(:username)
     name = read_from_console
-    message_var(:hello, name)
-    return choose_name unless @game.choose_name(name)
+    return enter_name unless @game.enter_name(name)
+    message(:hello, name: name)
   end
 
-  def input_level
+  def enter_level
     message(:choose_difficulty)
-    return input_level unless @game.choose_level(read_from_console)
+    return input_level unless @game.enter_level(read_from_console)
   end
-
 end
