@@ -1,5 +1,3 @@
 require './autoload.rb'
 
-console = Console.new
-
-console.launch
+console = Console.new.launch
