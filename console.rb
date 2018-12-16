@@ -35,7 +35,7 @@ class Console
     hint_show if user_answer == 'hint'
     message(:invalid_number) unless @game.validate_answer(user_answer)
     @game.take_attempts
-    @game.take_user_code(user_answer)
+    @game.set_user_code(user_answer)
     if @game.test_code(user_answer)
       win
     else
@@ -49,10 +49,7 @@ class Console
       message(:over_hint)
       round_game
     end
-    @game.secret_code.map.with_index do |element, index|
-      print element if index == @game.arr_index[@game.hints - 1]
-    end
-    print "\n"
+    puts @game.secret_code[@game.hints_index.shift]
     @game.take_hints
     round_game
   end
@@ -107,7 +104,7 @@ class Console
     message(:username)
     name = read_from_console
     return enter_name unless @game.enter_name(name)
-    
+
     message(:hello, name: name)
   end
 

@@ -3,7 +3,7 @@
 class Game
   include Validation
   attr_reader :attempts, :hints, :levels, :name, :level_num
-  attr_reader :arr_index, :result
+  attr_reader :hints_index, :result
   attr_reader :user_code, :secret_code, :phrases
 
   GAME_LEVELS = {
@@ -19,7 +19,7 @@ class Game
     @user_code = []
   end
 
-  def take_user_code(enter_code)
+  def set_user_code(enter_code)
     @user_code = enter_code.each_char.map(&:to_i)
   end
 
@@ -31,7 +31,7 @@ class Game
     @attempts = GAME_LEVELS.dig(levels.to_sym, :attempts)
     @hints = GAME_LEVELS.dig(levels.to_sym, :hints)
     @level_num = GAME_LEVELS.dig(levels.to_sym, :level_num)
-    @arr_index = (0..3).to_a.sample @hints
+    @hints_index = (0..3).to_a.sample @hints
   end
 
   def enter_name(name)
