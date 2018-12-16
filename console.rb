@@ -84,7 +84,6 @@ class Console
 
     message(:stats)
     message(:col_table)
-    raiting = 0
     data.each_with_index do |val, index|
       print "#{index}\t"
       val.each do |_key, value|
@@ -108,6 +107,7 @@ class Console
     message(:username)
     name = read_from_console
     return enter_name unless @game.enter_name(name)
+    
     message(:hello, name: name)
   end
 

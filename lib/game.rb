@@ -25,6 +25,7 @@ class Game
 
   def enter_level(levels)
     return unless validate_level(levels)
+
     @levels = levels
 
     @attempts = GAME_LEVELS.dig(levels.to_sym, :attempts)
@@ -35,6 +36,7 @@ class Game
 
   def enter_name(name)
     return unless validate_name(name)
+
     @name = name
   end
 
@@ -66,10 +68,11 @@ class Game
   def stats
     db = Db.new
     codebreaker_data = db.read_database
-    
+
     return unless codebreaker_data
+
     codebreaker_data.sort_by! { |stat| [stat[:level_num], stat[:hints], stat[:attempts]] }
-    codebreaker_data.each { |stat| stat.delete_if {|key, value| key == :level_num} }
+    codebreaker_data.each { |stat| stat.delete_if { |key, _value| key == :level_num } }
   end
 
   def win_save
@@ -81,5 +84,4 @@ class Game
     codebreaker_data << hash_stat
     db.write_database(codebreaker_data)
   end
-
 end
