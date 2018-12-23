@@ -14,10 +14,11 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v2-dependencies-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v2-dependencies-
-
+          - v3-dependencies-{{ checksum "Gemfile.lock" }}
+          - v3-dependencies-
+      - run:
+          name: Install CMAKE
+          command: 'apt-get update && sudo apt-get install -y cmake'      
       - run:
           name: install dependencies
           command: |
@@ -25,7 +26,7 @@ jobs:
       - save_cache:
           paths:
             - ./vendor/bundle
-          key: v2-dependencies-{{ checksum "Gemfile.lock" }}
+          key: v3-dependencies-{{ checksum "Gemfile.lock" }}
 
       # run tests!
       - run:
