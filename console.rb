@@ -1,5 +1,10 @@
 class Console
   YES = 'yes'.freeze
+  HINT = 'hint'.freeze
+  START = 'start'.freeze
+  RULES = 'rules'.freeze
+  STATS = 'stats'.freeze
+  EXIT = 'exit'.freeze
 
   def initialize
     @game = Game.new
@@ -9,39 +14,38 @@ class Console
     loop do
       message(:start_game)
       message(:wel_instruct)
-      answer = read_from_console
-      check_answer(answer)
+      @answer = read_from_console
+      check_answer
     end
   end
 
-  def check_answer(answer)
-    case answer
-    when 'start' then
-      enter_name
-      enter_level
-      @game.new_game
-      round_game
-    when 'rules' then
-      message(:rulegame)
-    when 'stats' then stats_show
-    when 'exit' then exit
+  def check_answer
+    case @answer
+    when START then start_game
+    when RULES then message(:rulegame)
+    when STATS then stats_show
+    when EXIT then exit
     end
+  end
+
+  def start_game
+    enter_name
+    enter_level
+    @game.new_game
+    round_game
   end
 
   def round_game
-    loose if @game.attempts.zero?
+    return loose if @game.attempts.zero?
     message(:question_num, attempts: @game.attempts, hints: @game.hints)
     user_answer = read_from_console
-    hint_show if user_answer == 'hint'
+    hint_show if user_answer == HINT
     message(:invalid_number) unless @game.validate_answer(user_answer)
     @game.take_attempts
     @game.set_user_code(user_answer)
-    if @game.test_code(user_answer)
-      win
-    else
-      puts @game.game_result
-      round_game
-    end
+    return win if @game.test_code(user_answer)
+    puts @game.game_result
+    round_game
   end
 
   def hint_show
@@ -57,18 +61,22 @@ class Console
   def win
     message(:win)
     message(:progress)
-    @game.win_save if read_from_console.eql? YES
-    restart_game
+    @game.save if read_from_console.eql? YES
+    new_game
   end
 
   def loose
     message(:lose)
+    new_game
+  end
+
+  def new_game
+    message(:new_game)
+    return exit unless read_from_console.eql? YES
     restart_game
   end
 
   def restart_game
-    message(:new_game)
-    exit unless read_from_console.eql? YES
     enter_level
     @game.new_game
     round_game

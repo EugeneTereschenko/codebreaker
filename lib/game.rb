@@ -75,7 +75,7 @@ class Game
     codebreaker_data.each { |stat| stat.delete_if { |key, _value| key == :level_num } }
   end
 
-  def win_save
+  def save
     db = Db.new
     codebreaker_data = db.read_database || []
     attempts_used = GAME_LEVELS.dig(levels.to_sym, :attempts) - attempts

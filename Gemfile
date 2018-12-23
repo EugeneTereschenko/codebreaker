@@ -17,4 +17,5 @@ group :test do
   gem 'simplecov'
   gem 'simplecov-lcov'
   gem 'undercover'
+  gem 'circleci', '~> 0.2.3'
 end
