@@ -37,13 +37,15 @@ class Console
 
   def round_game
     return loose if @game.attempts.zero?
+
     message(:question_num, attempts: @game.attempts, hints: @game.hints)
     user_answer = read_from_console
     hint_show if user_answer == HINT
     message(:invalid_number) unless @game.validate_answer(user_answer)
     @game.take_attempts
     @game.set_user_code(user_answer)
-    return win if @game.test_code(user_answer)
+    return win if @game.code?(user_answer)
+
     puts @game.game_result
     round_game
   end
@@ -83,7 +85,8 @@ class Console
   end
 
   def stats_show
-    data = @game.stats
+    stat = Stats.new()
+    data = stat.stats
 
     return message(:empty_stat) unless data
 

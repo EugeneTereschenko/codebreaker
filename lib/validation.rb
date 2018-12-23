@@ -1,4 +1,6 @@
 module Validation
+  USER_ANSWER_REX = /^[1-6]{4}$/
+
   def validate_name(name)
     name.size > 2 && name.size < 21
   end
@@ -8,6 +10,6 @@ module Validation
   end
 
   def validate_answer(user_answer)
-    user_answer =~ /^[1-6]{4}$/
+    user_answer =~ USER_ANSWER_REX
   end
 end
