@@ -17,10 +17,6 @@ jobs:
           - v3-dependencies-{{ checksum "Gemfile.lock" }}
           - v3-dependencies-     
       - run:
-          name: config build.rugged
-          command: |
-            bundle config build.rugged --use-system-libraries
-      - run:
           name: install dependencies
           command: |
             bundle install
