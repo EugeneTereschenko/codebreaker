@@ -23,8 +23,7 @@ RSpec.describe Game do
 
     it 'user_code is empty' do
       subject.new_game
-      expect(subject.user_code).to be_kind_of(Array)
-      expect(subject.user_code.size).to eq(0)
+      expect(subject.user_code).to be_nil
     end
   end
 
@@ -97,11 +96,11 @@ RSpec.describe Game do
   context 'enter code' do
     it 'test wrong enter code' do
       subject.instance_variable_set(:@secret_code, [1, 4, 1, 1])
-      expect(subject.test_code('3333')).to be_falsey
+      expect(subject.code?('3333')).to be_falsey
     end
     it 'test wrong enter code' do
       subject.instance_variable_set(:@secret_code, [1, 4, 1, 1])
-      expect(subject.test_code('1411')).to be_truthy
+      expect(subject.code?('1411')).to be_truthy
     end
   end
 
