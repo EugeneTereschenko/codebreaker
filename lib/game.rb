@@ -5,7 +5,7 @@ class Game
   attr_reader :attempts, :hints, :levels, :name, :level_num
   attr_reader :hints_index, :result
   attr_reader :user_code, :secret_code, :phrases
-  RANGE = 1..6
+  RANGE = (1..6).freeze
 
   GAME_LEVELS = {
     easy: { attempts: 30, hints: 3, level_num: 0 },
@@ -57,10 +57,9 @@ class Game
     (0..3).each do |index|
       result += '+' if @user_code[index] == @secret_code[index]
     end
+    return result if result.eql?('++++')
     (0..3).each do |index|
-      if @secret_code.include?(@user_code[index]) && @user_code[index] != @secret_code[index]
-        result += '-'
-      end
+      result += '-' if @secret_code.include?(@user_code[index]) && @user_code[index] != @secret_code[index]
     end
     result
   end
