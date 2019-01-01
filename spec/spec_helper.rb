@@ -1,6 +1,5 @@
 require 'simplecov'
 require './autoload.rb'
-require './lib/game.rb'
 
 SimpleCov.start
 

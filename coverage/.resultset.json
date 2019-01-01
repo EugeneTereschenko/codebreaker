@@ -1,9 +1,9 @@
 {
   "RSpec": {
     "coverage": {
-      "/home/kuter/workspace/codebreaker4/spec/game_spec.rb": [
+      "/home/kuter/workspace/codebreaker5/spec/game_spec.rb": [
         null,
-        null,
+        1,
         1,
         29,
         null,
@@ -164,9 +164,10 @@
         1,
         null,
         null,
+        null,
         null
       ]
     },
-    "timestamp": 1545728052
+    "timestamp": 1546364735
   }
 }

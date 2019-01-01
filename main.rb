@@ -1,3 +1,3 @@
 require './autoload.rb'
 
-Console.new.launch
+Codebreaker::Console.new.launch
