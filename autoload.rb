@@ -1,7 +1,7 @@
 require 'i18n'
 require 'yaml'
 require './lib/codebreaker/storage/StorageInterceptor.rb'
-require './lib/codebreaker/version/version.rb'
+require './lib/codebreaker/version.rb'
 require './lib/codebreaker/console.rb'
 require './lib/codebreaker/localization.rb'
 require './lib/codebreaker/validation.rb'
