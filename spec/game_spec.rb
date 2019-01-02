@@ -96,11 +96,11 @@ module Codebreaker
     context 'enter code' do
       it 'test wrong enter code' do
         subject.instance_variable_set(:@secret_code, [1, 4, 1, 1])
-        expect(subject.code?('3333')).to be_falsey
+        expect(subject.equal_codes?('3333')).to be_falsey
       end
       it 'test wrong enter code' do
         subject.instance_variable_set(:@secret_code, [1, 4, 1, 1])
-        expect(subject.code?('1411')).to be_truthy
+        expect(subject.equal_codes?('1411')).to be_truthy
       end
     end
 

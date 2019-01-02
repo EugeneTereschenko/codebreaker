@@ -7,14 +7,17 @@ module Codebreaker
     STATS = 'stats'.freeze
     EXIT = 'exit'.freeze
 
+    DIFFICULTIES = %w[easy medium hard].freeze
+
     def initialize
       @game = Codebreaker::Game.new
+      @stat = Codebreaker::Stats.new
     end
 
     def launch
       loop do
         message(:start_game)
-        message(:wel_instruct)
+        message(:wel_instruct, start: START, rules: RULES, stats: STATS, exit: EXIT)
         @answer = read_from_console
         check_answer
       end
@@ -37,18 +40,20 @@ module Codebreaker
     end
 
     def round_game
-      return loose if @game.attempts.zero?
+      loop do
+        return loose if @game.attempts.zero?
 
-      message(:question_num, attempts: @game.attempts, hints: @game.hints)
-      user_answer = read_from_console
-      hint_show if user_answer == HINT
-      message(:invalid_number) unless @game.validate_answer(user_answer)
-      @game.take_attempts
-      @game.set_user_code(user_answer)
-      return win if @game.code?(user_answer)
+        message(:question_num, attempts: @game.attempts, hints: @game.hints)
+        user_answer = read_from_console
+        hint_show if user_answer == HINT
+        next message(:invalid_number) unless @game.validate_answer(user_answer)
 
-      puts @game.game_result
-      round_game
+        @game.take_attempts
+        @game.set_user_code(user_answer)
+        return win if @game.equal_codes?(user_answer)
+
+        puts @game.game_result
+      end
     end
 
     def hint_show
@@ -56,7 +61,7 @@ module Codebreaker
         message(:over_hint)
         round_game
       end
-      puts @game.secret_code[@game.hints_index.shift]
+      puts @game.show_hints
       @game.take_hints
       round_game
     end
@@ -65,30 +70,21 @@ module Codebreaker
       message(:win)
       message(:progress)
       @game.save if read_from_console.eql? YES
-      new_game
+      continue_game? ? start_game : exit
     end
 
     def loose
       message(:lose)
-      new_game
+      continue_game? ? start_game : exit
     end
 
-    def new_game
+    def continue_game?
       message(:new_game)
-      return exit unless read_from_console.eql? YES
-
-      restart_game
-    end
-
-    def restart_game
-      enter_level
-      @game.new_game
-      round_game
+      read_from_console.eql? YES
     end
 
     def stats_show
-      stat = Stats.new
-      data = stat.stats
+      data = @stat.stats
 
       return message(:empty_stat) unless data
 
@@ -122,7 +118,7 @@ module Codebreaker
     end
 
     def enter_level
-      message(:choose_difficulty)
+      message(:choose_difficulty, difficulties: DIFFICULTIES.join(' '))
       return input_level unless @game.enter_level(read_from_console)
     end
   end

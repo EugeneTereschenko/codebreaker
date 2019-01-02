@@ -7,12 +7,12 @@ en:
   start_game: |
     Welcome to game Codebreaker
   wel_instruct: |
-    Type 'start' for starting new game.
-    Type 'rules' for showing rules.
-    Type 'stats' for showing statistics.
-    Type 'exit' for exit
+    Type %{start} for starting new game.
+    Type %{rules} for showing rules.
+    Type %{stats} for showing statistics.
+    Type %{exit} for exit
   choose_difficulty: |
-    Choose the difficulty level from easy medium hard
+    Choose the difficulty level from %{difficulties}
   username: |
     What is your name?
     Enter please

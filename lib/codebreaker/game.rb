@@ -3,7 +3,7 @@
 module Codebreaker
   class Game
     include Validation
-    attr_reader :attempts, :hints, :levels, :name, :level_num
+    attr_reader :attempts, :hints, :level, :name, :level_num
     attr_reader :hints_index, :result
     attr_reader :user_code, :secret_code, :phrases
     RANGE = (1..6).freeze
@@ -24,14 +24,14 @@ module Codebreaker
       @user_code = enter_code.each_char.map(&:to_i)
     end
 
-    def enter_level(levels)
-      return unless validate_level(levels)
+    def enter_level(level)
+      return unless validate_level(level)
 
-      @levels = levels
+      @level = level
 
-      @attempts = GAME_LEVELS.dig(levels.to_sym, :attempts)
-      @hints = GAME_LEVELS.dig(levels.to_sym, :hints)
-      @level_num = GAME_LEVELS.dig(levels.to_sym, :level_num)
+      @attempts = GAME_LEVELS.dig(level.to_sym, :attempts)
+      @hints = GAME_LEVELS.dig(level.to_sym, :hints)
+      @level_num = GAME_LEVELS.dig(level.to_sym, :level_num)
       @hints_index = (0..3).to_a.sample @hints
     end
 
@@ -41,7 +41,7 @@ module Codebreaker
       @name = name
     end
 
-    def code?(user_answer)
+    def equal_codes?(user_answer)
       secret_code.join == user_answer
     end
 
@@ -51,6 +51,10 @@ module Codebreaker
 
     def take_hints
       @hints -= 1
+    end
+
+    def show_hints
+      secret_code[hints_index.shift]
     end
 
     def game_result
@@ -69,9 +73,9 @@ module Codebreaker
     def save
       di = StorageInterceptor.new
       codebreaker_data = di.read_database || []
-      attempts_used = GAME_LEVELS.dig(levels.to_sym, :attempts) - attempts
-      hints_used = GAME_LEVELS.dig(levels.to_sym, :hints) - hints
-      hash_stat = { name: @name, level: @levels, level_num: @level_num, attempts: @attempts, attempts_used: attempts_used, hints: @hints, hints_used: hints_used }
+      attempts_used = GAME_LEVELS.dig(level.to_sym, :attempts) - attempts
+      hints_used = GAME_LEVELS.dig(level.to_sym, :hints) - hints
+      hash_stat = { name: @name, level: @level, level_num: @level_num, attempts: @attempts, attempts_used: attempts_used, hints: @hints, hints_used: hints_used }
       codebreaker_data << hash_stat
       di.write_database(codebreaker_data)
     end
