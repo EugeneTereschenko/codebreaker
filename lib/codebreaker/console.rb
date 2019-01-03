@@ -23,15 +23,6 @@ module Codebreaker
       end
     end
 
-    def check_answer
-      case @answer
-      when START then start_game
-      when RULES then message(:rulegame)
-      when STATS then stats_show
-      when EXIT then exit
-      end
-    end
-
     def start_game
       enter_name
       enter_level
@@ -100,6 +91,15 @@ module Codebreaker
     end
 
     private
+
+    def check_answer
+      case @answer
+      when START then start_game
+      when RULES then message(:rulegame)
+      when STATS then stats_show
+      when EXIT then exit
+      end
+    end
 
     def message(msg, params = {})
       puts I18n.t(msg, params)
