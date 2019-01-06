@@ -2,11 +2,10 @@
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'codebreaker/version'
 
 Gem::Specification.new do |spec|
   spec.name = 'codebreaker-rg-te'
-  spec.version = '0.1.9'
+  spec.version = '0.10.0'
   spec.authors = ['Eugene Tereschenko']
   spec.email = ['tereschenko.eugene@gmail.com']
 
