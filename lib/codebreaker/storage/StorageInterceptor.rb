@@ -1,5 +1,5 @@
 module Codebreaker
-  class StorageInterceptor
+class StorageInterceptor
     DEFAULT_PATH_TO_FILE = './data/stat.yml'.freeze
 
     def initialize(path_to_file = DEFAULT_PATH_TO_FILE)

@@ -1,5 +1,5 @@
 module Codebreaker
-  class Console
+class Console
     YES = 'yes'.freeze
     HINT = 'hint'.freeze
     START = 'start'.freeze

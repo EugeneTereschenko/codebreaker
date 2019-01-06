@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    codebreaker-rg-te (0.1.1)
+    codebreaker-rg-te (0.1.9)
 
 GEM
   remote: https://rubygems.org/
@@ -69,7 +69,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.16)
+  bundler (~> 2.0.1)
   codebreaker-rg-te!
   fasterer
   i18n
@@ -82,4 +82,4 @@ DEPENDENCIES
   simplecov
 
 BUNDLED WITH
-   1.16.1
+   2.0.1

@@ -1,5 +1,5 @@
 module Codebreaker
-  class Stats
+class Stats
     def stats
       di = StorageInterceptor.new
       codebreaker_data = di.read_database
