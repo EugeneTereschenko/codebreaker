@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Codebreaker
   class Game
     include Validation
@@ -13,9 +14,9 @@ module Codebreaker
       hard: { attempts: 10, hints: 1, level_num: 2 }
     }.freeze
 
-    COUNTS_OF_HINTS = 0..3
+    COUNTS_OF_HINTS = 0..3.freeze
     DIGITS_COUNT = 4
-    USER_ANSWER_REX = /^[1-6]{4}$/
+    USER_ANSWER_REX = /^[1-6]{4}$/.freeze
 
     def new_game
       @secret_code = Array.new(DIGITS_COUNT) { rand(RANGE) }
