@@ -1,29 +1,29 @@
+# frozen_string_literal: true
 module Codebreaker
-class Console
-    YES = 'yes'.freeze
-    HINT = 'hint'.freeze
-    START = 'start'.freeze
-    RULES = 'rules'.freeze
-    STATS = 'stats'.freeze
-    EXIT = 'exit'.freeze
+  class Console
 
-    DIFFICULTIES = %w[easy medium hard].freeze
+    COMMANDS = {
+      start: 'start',
+      rules: 'rules',
+      stats: 'stats',
+      exit: 'exit'
+    }.freeze
 
-    def initialize
-      @game = Codebreaker::Game.new
-      @stat = Codebreaker::Stats.new
-    end
+    HINT = 'hint'
+
+    ANSWERS = { yes: 'yes' }
 
     def launch
       loop do
         message(:start_game)
-        message(:wel_instruct, start: START, rules: RULES, stats: STATS, exit: EXIT)
+        message(:wel_instruct, COMMANDS)
         @answer = read_from_console
         check_answer
       end
     end
 
     def start_game
+      @game = Codebreaker::Game.new
       enter_name
       enter_level
       @game.new_game
@@ -31,36 +31,30 @@ class Console
     end
 
     def round_game
-      loop do
-        return loose if @game.attempts.zero?
-
-        message(:question_num, attempts: @game.attempts, hints: @game.hints)
-        user_answer = read_from_console
-        hint_show if user_answer == HINT
+      while @game.attempts.positive?
+        user_answer = message_game_read_console
+        next hint_show if user_answer == HINT
         next message(:invalid_number) unless @game.validate_answer(user_answer)
 
-        @game.take_attempts
-        @game.set_user_code(user_answer)
+        @game.handle_guess(user_answer)
         return win if @game.equal_codes?(user_answer)
 
-        puts @game.game_result
+        message_game_result
       end
+      loose
     end
 
     def hint_show
-      if @game.hints.zero?
-        message(:over_hint)
-        round_game
-      end
+      return message(:over_hint) if @game.hints.zero?
+
       puts @game.show_hints
       @game.take_hints
-      round_game
     end
 
     def win
       message(:win)
       message(:progress)
-      @game.save if read_from_console.eql? YES
+      @game.save if read_from_console.eql? ANSWERS[:yes]
       continue_game? ? start_game : exit
     end
 
@@ -71,20 +65,19 @@ class Console
 
     def continue_game?
       message(:new_game)
-      read_from_console.eql? YES
+      read_from_console.eql? ANSWERS[:yes]
     end
 
     def stats_show
-      data = @stat.stats
-
-      return message(:empty_stat) unless data
+      @stat = Codebreaker::Stats.new
+      return message(:empty_stat) unless data = @stat.stats
 
       message(:stats)
       message(:col_table)
-      data.each_with_index do |val, index|
+      data.each_with_index do |row, index|
         print "#{index}\t"
-        val.each do |_key, value|
-          print "#{value}\t"
+        row.each do |_key, cell|
+          print "#{cell}\t"
         end
         print "\n"
       end
@@ -94,10 +87,10 @@ class Console
 
     def check_answer
       case @answer
-      when START then start_game
-      when RULES then message(:rulegame)
-      when STATS then stats_show
-      when EXIT then exit
+      when COMMANDS[:start] then start_game
+      when COMMANDS[:rules] then message(:rulegame)
+      when COMMANDS[:stats] then stats_show
+      when COMMANDS[:exit] then exit
       end
     end
 
@@ -109,16 +102,24 @@ class Console
       gets.chomp
     end
 
+    def message_game_read_console
+      message(:question_num, attempts: @game.attempts, hints: @game.hints)
+      read_from_console
+    end
+
+    def message_game_result
+      puts @game.game_result
+    end
+
     def enter_name
       message(:username)
-      name = read_from_console
-      return enter_name unless @game.enter_name(name)
+      return enter_name unless @game.enter_name(read_from_console)
 
-      message(:hello, name: name)
+      message(:hello, name: @game.name)
     end
 
     def enter_level
-      message(:choose_difficulty, difficulties: DIFFICULTIES.join(' '))
+      message(:choose_difficulty, difficulties: Codebreaker::Game::GAME_LEVELS.keys.join(' '))
       return input_level unless @game.enter_level(read_from_console)
     end
   end

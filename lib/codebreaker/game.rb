@@ -13,14 +13,11 @@ module Codebreaker
       hard: { attempts: 10, hints: 1, level_num: 2 }
     }.freeze
 
+    COUNTS_OF_HINTS = 0..3
     DIGITS_COUNT = 4
 
     def new_game
       @secret_code = Array.new(DIGITS_COUNT) { rand(RANGE) }
-    end
-
-    def set_user_code(enter_code)
-      @user_code = enter_code.each_char.map(&:to_i)
     end
 
     def enter_level(level)
@@ -56,15 +53,33 @@ module Codebreaker
       secret_code[hints_index.shift]
     end
 
-    def game_result
-      result = ''
-      (0..3).each do |index|
-        result += '+' if @user_code[index] == @secret_code[index]
-      end
-      return result if result.eql?('++++')
+    def set_user_code(enter_code)
+      @user_code = enter_code.each_char.map(&:to_i)
+    end
 
-      (0..3).each do |index|
-        result += '-' if @secret_code.include?(@user_code[index]) && @user_code[index] != @secret_code[index]
+    def handle_guess(user_answer)
+      take_attempts
+      set_user_code(user_answer)
+    end
+
+    def game_result
+      return '++++' if equal_codes?(@user_code.join)
+
+      result = ''
+      @secret_code_clone = @secret_code.clone
+      @user_code.each_with_index do |digit, index|
+        next unless digit == @secret_code_clone[index]
+
+        result += '+'
+        @secret_code_clone[index] = nil
+        @user_code[index] = nil
+      end
+      
+      @user_code.compact.each_with_index do |digit, index|
+        next unless @secret_code_clone.include?(digit)
+
+        result += '-'
+        @secret_code_clone[@secret_code_clone.index(digit)] = nil
       end
       result
     end
