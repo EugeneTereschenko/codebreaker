@@ -10,8 +10,8 @@ class StorageInterceptor
       YAML.load_file(@path_to_file) if File.exist?(@path_to_file)
     end
 
-    def write_database(library)
-      File.open(@path_to_file, 'w') { |file| file.write(library.to_yaml) }
+    def write_database(data)
+      File.open(@path_to_file, 'w') { |file| file.write(data.to_yaml) }
     end
   end
 end

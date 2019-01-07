@@ -29,47 +29,29 @@ module Codebreaker
 
     context '#valid_answer' do
       it 'it not digits' do
-        expect(subject.validate_answer('test')).to be_falsey
+        expect(subject.validate_code('test')).to be_falsey
       end
 
       it 'it four digits' do
-        expect(subject.validate_answer('1234')).to be_truthy
+        expect(subject.validate_code('1234')).to be_truthy
       end
 
       it 'it six digits' do
-        expect(subject.validate_answer('123456')).to be_falsey
+        expect(subject.validate_code('123456')).to be_falsey
       end
     end
 
-    context '#valid_name' do
+    context '#valid_length' do
       it 'short name' do
-        expect(subject.validate_name('t')).to be_falsey
+        expect(subject.validate_length('t')).to be_falsey
       end
 
-      it 'normal name' do
-        expect(subject.validate_name('test')).to be_truthy
+      it 'normal length' do
+        expect(subject.validate_length('test')).to be_truthy
       end
 
-      it 'long name' do
-        expect(subject.validate_name('testtesttesttesttesttesttesttesttest')).to be_falsey
-      end
-    end
-
-    context '#validate_level' do
-      it 'easy level' do
-        expect(subject.validate_level('easy')).to be_truthy
-      end
-
-      it 'medium level' do
-        expect(subject.validate_level('medium')).to be_truthy
-      end
-
-      it 'hard level' do
-        expect(subject.validate_level('hard')).to be_truthy
-      end
-
-      it 'wrong level' do
-        expect(subject.validate_name('testtesttesttesttesttesttesttesttest')).to be_falsey
+      it 'long length' do
+        expect(subject.validate_length('testtesttesttesttesttesttesttesttest')).to be_falsey
       end
     end
 
@@ -93,6 +75,18 @@ module Codebreaker
       end
     end
 
+    context 'enter_name' do
+      it 'enter valid name' do
+        subject.enter_name('asdasdasdasd')
+        expect(subject.name).not_to be_empty
+      end
+
+      it 'enter valid name' do
+        subject.enter_name('')
+        expect(subject.name).to be_nil
+      end
+    end
+
     context 'enter code' do
       it 'test wrong enter code' do
         subject.instance_variable_set(:@secret_code, [1, 4, 1, 1])
@@ -101,6 +95,22 @@ module Codebreaker
       it 'test wrong enter code' do
         subject.instance_variable_set(:@secret_code, [1, 4, 1, 1])
         expect(subject.equal_codes?('1411')).to be_truthy
+      end
+    end
+
+    context 'take attempts' do
+      it 'test take attempts' do
+        subject.instance_variable_set(:@attempts, 5)
+        subject.take_attempts
+        expect(subject.attempts).to eq(4)
+      end
+    end
+
+    context 'take_hints' do
+      it 'take hints' do
+        subject.instance_variable_set(:@hints, 5)
+        subject.take_hints
+        expect(subject.hints).to eq(4)
       end
     end
 

@@ -34,7 +34,7 @@ module Codebreaker
       while @game.attempts.positive?
         user_answer = message_game_read_console
         next hint_show if user_answer == HINT
-        next message(:invalid_number) unless @game.validate_answer(user_answer)
+        next message(:invalid_number) unless @game.validate_code(user_answer)
 
         @game.handle_guess(user_answer)
         return win if @game.equal_codes?(user_answer)
@@ -69,7 +69,7 @@ module Codebreaker
     end
 
     def stats_show
-      @stat = Codebreaker::Stats.new
+      @stat = Codebreaker::Statistics.new
       return message(:empty_stat) unless data = @stat.stats
 
       message(:stats)
@@ -120,7 +120,7 @@ module Codebreaker
 
     def enter_level
       message(:choose_difficulty, difficulties: Codebreaker::Game::GAME_LEVELS.keys.join(' '))
-      return input_level unless @game.enter_level(read_from_console)
+      return enter_level unless @game.enter_level(read_from_console)
     end
   end
 end

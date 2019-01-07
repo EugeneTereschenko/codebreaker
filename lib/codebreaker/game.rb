@@ -15,24 +15,24 @@ module Codebreaker
 
     COUNTS_OF_HINTS = 0..3
     DIGITS_COUNT = 4
+    USER_ANSWER_REX = /^[1-6]{4}$/
 
     def new_game
       @secret_code = Array.new(DIGITS_COUNT) { rand(RANGE) }
     end
 
     def enter_level(level)
-      return unless validate_level(level)
-
+      return unless GAME_LEVELS.keys.include?(level.to_sym)
       @level = level
 
       @attempts = GAME_LEVELS.dig(level.to_sym, :attempts)
       @hints = GAME_LEVELS.dig(level.to_sym, :hints)
       @level_num = GAME_LEVELS.dig(level.to_sym, :level_num)
-      @hints_index = (0..3).to_a.sample @hints
+      @hints_index = (COUNTS_OF_HINTS).to_a.sample @hints
     end
 
     def enter_name(name)
-      return unless validate_name(name)
+      return unless validate_length(name)
 
       @name = name
     end
@@ -84,14 +84,17 @@ module Codebreaker
       result
     end
 
-    def save
-      di = StorageInterceptor.new
-      codebreaker_data = di.read_database || []
+    def storage_data(codebreaker_data)
       attempts_used = GAME_LEVELS.dig(level.to_sym, :attempts) - attempts
       hints_used = GAME_LEVELS.dig(level.to_sym, :hints) - hints
       hash_stat = { name: @name, level: @level, level_num: @level_num, attempts: @attempts, attempts_used: attempts_used, hints: @hints, hints_used: hints_used }
       codebreaker_data << hash_stat
-      di.write_database(codebreaker_data)
+    end
+
+    def save
+      storage = StorageInterceptor.new
+      codebreaker_data = storage.read_database || []
+      storage.write_database(storage_data(codebreaker_data))
     end
   end
 end
