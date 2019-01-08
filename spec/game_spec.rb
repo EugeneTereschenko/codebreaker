@@ -3,6 +3,20 @@ module Codebreaker
   RSpec.describe Game do
     subject { Game.new }
 
+    context '#valid_answer' do
+      it 'it not digits' do
+        expect(subject.validate_code('test')).to be_falsey
+      end
+
+      it 'it four digits' do
+        expect(subject.validate_code('1234')).to be_truthy
+      end
+
+      it 'it six digits' do
+        expect(subject.validate_code('123456')).to be_falsey
+      end
+    end
+
     context 'secret_code' do
       let(:secret_code) { subject.secret_code }
 
@@ -24,20 +38,6 @@ module Codebreaker
       it 'user_code is empty' do
         subject.new_game
         expect(subject.user_code).to be_nil
-      end
-    end
-
-    context '#valid_answer' do
-      it 'it not digits' do
-        expect(subject.validate_code('test')).to be_falsey
-      end
-
-      it 'it four digits' do
-        expect(subject.validate_code('1234')).to be_truthy
-      end
-
-      it 'it six digits' do
-        expect(subject.validate_code('123456')).to be_falsey
       end
     end
 
@@ -111,6 +111,29 @@ module Codebreaker
         subject.instance_variable_set(:@hints, 5)
         subject.take_hints
         expect(subject.hints).to eq(4)
+      end
+    end
+
+    context 'show_hints' do
+      it 'show hints' do
+        subject.instance_variable_set(:@secret_code, [0, 1, 2, 3])
+        subject.instance_variable_set(:@hints_index, [0, 1])
+        expect(subject.show_hints).to eq(0)
+      end
+    end
+
+    context 'set_user_code' do
+      it 'set user code' do
+        subject.instance_variable_set(:@user_code, [0, 1, 2, 3])
+        expect(subject.set_user_code('0123')).to be_truthy
+      end
+    end
+
+    context 'handle_guess' do
+      it 'handle guess' do
+        subject.instance_variable_set(:@attempts, 5)
+        subject.handle_guess("")
+        expect(subject.attempts).to be 4
       end
     end
 
