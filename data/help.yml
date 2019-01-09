@@ -1,16 +1,10 @@
 en:
-  rulegame: |
-    You have to guess 4-digit number where each digit placed between 1 and 6.
-    The code-maker then marks the guess with up to four + and - signs.
-    A + indicates an exact match, one of the numbers in the guess is the same.
-    A - indicates a number match, one of the numbers in the guess is the same as one of the numbers in the secret code but in a different position.
-  start_game: |
-    Welcome to game Codebreaker
-  wel_instruct: |
-    Type %{start} for starting new game.
-    Type %{rules} for showing rules.
-    Type %{stats} for showing statistics.
-    Type %{exit} for exit
+  rulegame:
+    "You have to guess 4-digit number where each digit placed between 1 and 6.\nThe code-maker then marks the guess with up to four + and - signs.\nA + indicates an exact match, one of the numbers in the guess is the same.\nA - indicates a number match, one of the numbers in the guess is the same as one of the numbers in the secret code but in a different position.\n"
+  start_game:
+    "Welcome to game Codebreaker\n"
+  wel_instruct: 
+    "Type %{start} for starting new game.\nType %{rules} for showing rules.\nType %{stats} for showing statistics.\nType %{exit} for exit\n"
   choose_difficulty: |
     Choose the difficulty level from %{difficulties}
   username: |

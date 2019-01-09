@@ -19,7 +19,7 @@ module Codebreaker
         message(:start_game)
         message(:wel_instruct, COMMANDS)
         @answer = read_from_console
-        check_answer
+        return check_answer
       end
     end
 

@@ -4,7 +4,7 @@ require 'codebreaker/storage/StorageInterceptor.rb'
 require 'codebreaker/console.rb'
 require 'codebreaker/localization.rb'
 require 'codebreaker/validation.rb'
-require 'codebreaker/stats.rb'
+require 'codebreaker/statistics.rb'
 require 'codebreaker/game.rb'
 require 'codebreaker.rb'
 
