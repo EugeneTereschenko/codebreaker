@@ -1,6 +1,6 @@
 RSpec.describe Codebreaker::Console do
   subject { Codebreaker::Console.new }
-  # game_subject { Codebreaker::Game.new }
+  #let(:game) { Codebreaker::Game.new }
 
   HELLO_PHRASES = "Welcome to game Codebreaker\n".freeze
 
@@ -50,4 +50,24 @@ RSpec.describe Codebreaker::Console do
       subject.start_game
     end
   end
+
+  context 'win' do
+    it 'win' do
+      expect(subject).to receive(:puts).with('your win')
+      expect(subject).to receive(:puts).with('Enter yes if you want to save your progress')
+      expect(subject).to receive(:puts).with("Enter yes if you want a new game\n")
+      allow(subject).to receive_message_chain(:read_from_console) { :no }
+      expect(subject).to receive(:exit)
+      subject.win
+    end
+
+    it 'loose' do
+      expect(subject).to receive(:puts).with('Your lose')
+      expect(subject).to receive(:puts).with("Enter yes if you want a new game\n")
+      allow(subject).to receive_message_chain(:read_from_console) { :no }
+      expect(subject).to receive(:exit)
+      subject.loose
+    end
+  end
+
 end

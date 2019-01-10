@@ -16,12 +16,12 @@ en:
     Put 4-digital number
   over_hint: |
     You don't have any hints
-  win: |
-    your win
-  progress: |
-    Enter yes if you want to save your progress
-  lose: |
-    Your lose
+  win:
+    "your win"
+  progress:
+    "Enter yes if you want to save your progress"
+  lose:
+    "Your lose"
   new_game: |
     Enter yes if you want a new game
   hello: |

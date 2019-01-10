@@ -187,7 +187,7 @@ RSpec.describe Codebreaker::Game do
     end
   end
 
-  describe '#input_code' do
+  context '#input_code' do
     it 'take a guess and inputs code' do
       subject.instance_variable_set(:@user_code, [1, 2, 3, 6])
       expect(subject.user_code).not_to be_empty
