@@ -14,7 +14,7 @@ module Codebreaker
       hard: { attempts: 10, hints: 1, level_num: 2 }
     }.freeze
 
-    COUNTS_OF_HINTS = 0..3.freeze
+    COUNTS_OF_HINTS = (0..3).freeze
     DIGITS_COUNT = 4
     USER_ANSWER_REX = /^[1-6]{4}$/.freeze
 
@@ -23,13 +23,14 @@ module Codebreaker
     end
 
     def enter_level(level)
-      return unless GAME_LEVELS.keys.include?(level.to_sym)
+      return unless GAME_LEVELS.key?(level.to_sym)
+
       @level = level
 
       @attempts = GAME_LEVELS.dig(level.to_sym, :attempts)
       @hints = GAME_LEVELS.dig(level.to_sym, :hints)
       @level_num = GAME_LEVELS.dig(level.to_sym, :level_num)
-      @hints_index = (COUNTS_OF_HINTS).to_a.sample @hints
+      @hints_index = COUNTS_OF_HINTS.to_a.sample @hints
     end
 
     def enter_name(name)
@@ -75,8 +76,8 @@ module Codebreaker
         @secret_code_clone[index] = nil
         @user_code[index] = nil
       end
-      
-      @user_code.compact.each_with_index do |digit, index|
+
+      @user_code.compact.each_with_index do |digit, _index|
         next unless @secret_code_clone.include?(digit)
 
         result += '-'

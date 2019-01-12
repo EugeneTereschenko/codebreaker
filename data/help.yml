@@ -22,8 +22,8 @@ en:
     "Enter yes if you want to save your progress"
   lose:
     "Your lose"
-  new_game: |
-    Enter yes if you want a new game
+  new_game:
+    "Enter yes if you want a new game"
   hello: |
     Hello, your name is %{name}
   empty_stat: |

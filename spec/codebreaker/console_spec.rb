@@ -1,6 +1,6 @@
 RSpec.describe Codebreaker::Console do
   subject { Codebreaker::Console.new }
-  #let(:game) { Codebreaker::Game.new }
+  let(:game) { Codebreaker::Game.new }
 
   HELLO_PHRASES = "Welcome to game Codebreaker\n".freeze
 
@@ -45,7 +45,7 @@ RSpec.describe Codebreaker::Console do
   context 'start game' do
     it 'start_game' do
       expect(subject).to receive(:enter_name)
-      expect(subject).to receive(:read_from_console) {'easy'}
+      expect(subject).to receive(:read_from_console) { 'easy' }
       expect(subject).to receive(:round_game)
       subject.start_game
     end
@@ -55,7 +55,7 @@ RSpec.describe Codebreaker::Console do
     it 'win' do
       expect(subject).to receive(:puts).with('your win')
       expect(subject).to receive(:puts).with('Enter yes if you want to save your progress')
-      expect(subject).to receive(:puts).with("Enter yes if you want a new game\n")
+      expect(subject).to receive(:puts).with('Enter yes if you want a new game')
       allow(subject).to receive_message_chain(:read_from_console) { :no }
       expect(subject).to receive(:exit)
       subject.win
@@ -63,11 +63,38 @@ RSpec.describe Codebreaker::Console do
 
     it 'loose' do
       expect(subject).to receive(:puts).with('Your lose')
-      expect(subject).to receive(:puts).with("Enter yes if you want a new game\n")
+      expect(subject).to receive(:puts).with('Enter yes if you want a new game')
       allow(subject).to receive_message_chain(:read_from_console) { :no }
       expect(subject).to receive(:exit)
       subject.loose
     end
   end
 
+  context 'continue' do
+    it 'continue game' do
+      expect(subject).to receive(:puts).with('Enter yes if you want a new game')
+      allow(subject).to receive_message_chain(:read_from_console) { :no }
+      subject.continue_game?
+    end
+  end
+
+  context 'round_game' do
+    it 'round_game zero attempts' do
+      allow(game).to receive(:attempts) { 0 }
+      subject.instance_variable_set(:@game, game)
+      expect(subject).to receive(:loose)
+      subject.round_game
+    end
+
+    it 'round_game win' do
+      allow(game).to receive(:attempts) { 3 }
+      allow(game).to receive(:validate_code) { true }
+      allow(game).to receive(:handle_guess)
+      allow(game).to receive(:equal_codes?) { true }
+      subject.instance_variable_set(:@game, game)
+      allow(subject).to receive(:message_game_read_console) { '1234' }
+      expect(subject).to receive(:win)
+      subject.round_game
+    end
+  end
 end

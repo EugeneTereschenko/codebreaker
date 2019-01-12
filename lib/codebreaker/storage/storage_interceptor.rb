@@ -13,5 +13,5 @@ module Codebreaker
     def write_database(data)
       File.open(@path_to_file, 'w') { |file| file.write(data.to_yaml) }
     end
-    end
+  end
 end

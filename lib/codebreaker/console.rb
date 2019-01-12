@@ -2,7 +2,6 @@
 
 module Codebreaker
   class Console
-
     COMMANDS = {
       start: 'start',
       rules: 'rules',
@@ -12,7 +11,7 @@ module Codebreaker
 
     HINT = 'hint'
 
-    ANSWERS = { yes: 'yes' }
+    ANSWERS = { yes: 'yes' }.freeze
 
     def launch
       loop do
