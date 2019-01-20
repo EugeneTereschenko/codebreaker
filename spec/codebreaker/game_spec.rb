@@ -1,8 +1,6 @@
 # spec/game_spec.rb
 
 RSpec.describe Codebreaker::Game do
-  subject { Codebreaker::Game.new }
-
   context 'secret_code' do
     let(:secret_code) { subject.secret_code }
 
@@ -51,9 +49,10 @@ RSpec.describe Codebreaker::Game do
     it 'enter valid name' do
       subject.enter_name('asdasdasdasd')
       expect(subject.name).not_to be_empty
+      expect(subject.name).to eq('asdasdasdasd')
     end
 
-    it 'enter valid name' do
+    it 'enter not valid name' do
       subject.enter_name('')
       expect(subject.name).to be_nil
     end
@@ -62,19 +61,18 @@ RSpec.describe Codebreaker::Game do
   context 'enter code' do
     it 'test wrong enter code' do
       subject.instance_variable_set(:@secret_code, [1, 4, 1, 1])
-      expect(subject.equal_codes?('3333')).to be_falsey
+      expect(subject.equal_codes?('3333')).to eq(false)
     end
     it 'test wrong enter code' do
       subject.instance_variable_set(:@secret_code, [1, 4, 1, 1])
-      expect(subject.equal_codes?('1411')).to be_truthy
+      expect(subject.equal_codes?('1411')).to eq(true)
     end
   end
 
   context 'take attempts' do
     it 'test take attempts' do
       subject.instance_variable_set(:@attempts, 5)
-      subject.take_attempts
-      expect(subject.attempts).to eq(4)
+      expect { subject.take_attempts }.to change { subject.attempts }.from(5).to(4)
     end
   end
 

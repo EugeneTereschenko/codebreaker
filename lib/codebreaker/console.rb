@@ -14,32 +14,22 @@ module Codebreaker
     ANSWERS = { yes: 'yes' }.freeze
 
     def launch
-      loop do
-        message(:start_game)
-        message(:wel_instruct, COMMANDS)
-        @answer = read_from_console
-        return check_answer
-      end
-    end
-
-    def start_game
-      @game = Codebreaker::Game.new
-      enter_name
-      enter_level
-      @game.new_game
-      round_game
+      message(:start_game)
+      message(:wel_instruct, COMMANDS)
+      @answer = read_from_console
+      check_answer
     end
 
     def round_game
       while @game.attempts.positive?
         user_answer = message_game_read_console
         next hint_show if user_answer == HINT
-        next message(:invalid_number) unless @game.validate_code(user_answer)
+        next message(:invalid_number) unless @game.validate_code(user_answer, Codebreaker::Game::USER_ANSWER_REX)
 
         @game.handle_guess(user_answer)
+        message_game_result
         return win if @game.equal_codes?(user_answer)
 
-        message_game_result
       end
       loose
     end
@@ -63,11 +53,6 @@ module Codebreaker
       continue_game? ? start_game : exit
     end
 
-    def continue_game?
-      message(:new_game)
-      read_from_console.eql? ANSWERS[:yes]
-    end
-
     def stats_show
       @stat = Codebreaker::Statistics.new
       return message(:empty_stat) unless data = @stat.stats
@@ -84,6 +69,19 @@ module Codebreaker
     end
 
     private
+
+    def continue_game?
+      message(:new_game)
+      read_from_console.eql? ANSWERS[:yes]
+    end
+
+    def start_game
+      @game = Codebreaker::Game.new
+      enter_name
+      enter_level
+      @game.new_game
+      round_game
+    end
 
     def check_answer
       case @answer

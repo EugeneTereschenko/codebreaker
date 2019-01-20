@@ -1,9 +1,9 @@
 module Validation
-  def validate_length(word)
-    word.size > 2 && word.size < 21
+  def validate_length(word, range)
+    range.include?(word.size)
   end
 
-  def validate_code(code)
-    code =~ Codebreaker::Game::USER_ANSWER_REX
+  def validate_code(code, regexp)
+    code =~ regexp
   end
 end

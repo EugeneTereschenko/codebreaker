@@ -17,6 +17,7 @@ module Codebreaker
     COUNTS_OF_HINTS = (0..3).freeze
     DIGITS_COUNT = 4
     USER_ANSWER_REX = /^[1-6]{4}$/.freeze
+    NAME_SIZE_RANGE = (3..20).freeze
 
     def new_game
       @secret_code = Array.new(DIGITS_COUNT) { rand(RANGE) }
@@ -34,7 +35,7 @@ module Codebreaker
     end
 
     def enter_name(name)
-      return unless validate_length(name)
+      return unless validate_length(name, NAME_SIZE_RANGE)
 
       @name = name
     end
@@ -65,25 +66,7 @@ module Codebreaker
     end
 
     def game_result
-      return '++++' if equal_codes?(@user_code.join)
-
-      result = ''
-      @secret_code_clone = @secret_code.clone
-      @user_code.each_with_index do |digit, index|
-        next unless digit == @secret_code_clone[index]
-
-        result += '+'
-        @secret_code_clone[index] = nil
-        @user_code[index] = nil
-      end
-
-      @user_code.compact.each_with_index do |digit, _index|
-        next unless @secret_code_clone.include?(digit)
-
-        result += '-'
-        @secret_code_clone[@secret_code_clone.index(digit)] = nil
-      end
-      result
+      count_plus + count_minus
     end
 
     def storage_data(codebreaker_data)
@@ -97,6 +80,33 @@ module Codebreaker
       storage = StorageInterceptor.new
       codebreaker_data = storage.read_database || []
       storage.write_database(storage_data(codebreaker_data))
+    end
+
+    private
+
+    def count_plus
+      result = ''
+      @secret_code_clone = @secret_code.clone
+      @user_code.each_with_index do |digit, index|
+        next unless digit == @secret_code_clone[index]
+
+        result += '+'
+        @secret_code_clone[index] = nil
+        @user_code[index] = nil
+      end
+      result
+    end
+
+    def count_minus
+      result = ''
+      @secret_code_clone = @secret_code.clone
+      @user_code.compact.each_with_index do |digit, _index|
+        next unless @secret_code_clone.include?(digit)
+
+        result += '-'
+        @secret_code_clone[@secret_code_clone.index(digit)] = nil
+      end
+      result
     end
   end
 end
