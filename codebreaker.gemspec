@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name = 'codebreaker-rg-te'
-  spec.version = '0.1.14'
+  spec.version = '0.1.15'
   spec.authors = ['Eugene Tereschenko']
   spec.email = ['tereschenko.eugene@gmail.com']
 
