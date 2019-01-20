@@ -5,6 +5,7 @@ jobs:
        - image: circleci/ruby:2.4-node-browsers
          enviroment:
           RAILS_ENV: test
+          BUNDLER_VERSION: 2.0.1
 
     working_directory: ~/repo
 
