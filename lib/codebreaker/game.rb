@@ -3,7 +3,7 @@
 module Codebreaker
   class Game
     include Validation
-    attr_reader :attempts, :hints, :level, :name, :level_num
+    attr_reader :attempts, :hints, :level, :name, :level_num, :current_time
     attr_reader :hints_index, :result
     attr_reader :user_code, :secret_code, :phrases
     RANGE = (1..6).freeze
@@ -66,13 +66,15 @@ module Codebreaker
     end
 
     def game_result
+      puts @secret_code
       count_plus + count_minus
     end
 
     def storage_data(codebreaker_data)
       attempts_used = GAME_LEVELS.dig(level.to_sym, :attempts) - attempts
       hints_used = GAME_LEVELS.dig(level.to_sym, :hints) - hints
-      hash_stat = { name: @name, level: @level, level_num: @level_num, attempts: @attempts, attempts_used: attempts_used, hints: @hints, hints_used: hints_used }
+      game_date = Time.new.strftime "%Y/%m/%d %H:%M:%S"
+      hash_stat = { name: @name, level: @level, level_num: @level_num, attempts: @attempts, attempts_used: attempts_used, hints: @hints, hints_used: hints_used, game_date: game_date }
       codebreaker_data << hash_stat
     end
 
