@@ -3,7 +3,7 @@
 module Codebreaker
   class Game
     include Validation
-    attr_reader :attempts, :hints, :level, :name, :level_num, :current_time
+    attr_reader :attempts, :hints, :level, :name, :level_num
     attr_reader :hints_index, :result
     attr_reader :user_code, :secret_code, :phrases
     RANGE = (1..6).freeze
@@ -66,15 +66,22 @@ module Codebreaker
     end
 
     def game_result
-      puts @secret_code
-      count_plus + count_minus
+      secret_code_clone = @secret_code.clone
+      count_plus(secret_code_clone) + count_minus(secret_code_clone)
     end
 
     def storage_data(codebreaker_data)
       attempts_used = GAME_LEVELS.dig(level.to_sym, :attempts) - attempts
       hints_used = GAME_LEVELS.dig(level.to_sym, :hints) - hints
-      game_date = Time.new.strftime "%Y/%m/%d %H:%M:%S"
-      hash_stat = { name: @name, level: @level, level_num: @level_num, attempts: @attempts, attempts_used: attempts_used, hints: @hints, hints_used: hints_used, game_date: game_date }
+      game_date = Time.new.strftime '%Y/%m/%d %H:%M:%S'
+      hash_stat = { name: @name,
+                    level: @level,
+                    level_num: @level_num,
+                    attempts: @attempts,
+                    attempts_used: attempts_used,
+                    hints: @hints,
+                    hints_used: hints_used,
+                    game_date: game_date }
       codebreaker_data << hash_stat
     end
 
@@ -86,27 +93,25 @@ module Codebreaker
 
     private
 
-    def count_plus
+    def count_plus(secret_code_clone)
       result = ''
-      @secret_code_clone = @secret_code.clone
       @user_code.each_with_index do |digit, index|
-        next unless digit == @secret_code_clone[index]
+        next unless digit == secret_code_clone[index]
 
         result += '+'
-        @secret_code_clone[index] = nil
+        secret_code_clone[index] = nil
         @user_code[index] = nil
       end
       result
     end
 
-    def count_minus
+    def count_minus(secret_code_clone)
       result = ''
-      @secret_code_clone = @secret_code.clone
       @user_code.compact.each_with_index do |digit, _index|
-        next unless @secret_code_clone.include?(digit)
+        next unless secret_code_clone.include?(digit)
 
         result += '-'
-        @secret_code_clone[@secret_code_clone.index(digit)] = nil
+        secret_code_clone[secret_code_clone.index(digit)] = nil
       end
       result
     end

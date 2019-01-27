@@ -1,0 +1,8 @@
+require 'i18n'
+require 'yaml'
+require_relative 'storage/storage_interceptor'
+require_relative 'console'
+require_relative 'localization'
+require_relative 'validation'
+require_relative 'statistics'
+require_relative 'game'

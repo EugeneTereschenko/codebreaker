@@ -107,7 +107,125 @@ RSpec.describe Codebreaker::Game do
     end
   end
 
+  context 'assigns count_plus to' do
+    it '++' do
+      subject.instance_variable_set(:@user_code, [6, 5, 4, 3])
+      secret_code = [5, 6, 4, 3]
+      expect(subject.send(:count_plus, secret_code)).to eq('++')
+    end
+
+    it '+' do
+      subject.instance_variable_set(:@user_code, [1, 2, 3, 4])
+      secret_code = [3, 1, 2, 4]
+      expect(subject.send(:count_plus, secret_code)).to eq('+')
+    end
+
+    it '++' do
+      subject.instance_variable_set(:@user_code, [1, 2, 3, 4])
+      secret_code = [1, 5, 2, 4]
+      expect(subject.send(:count_plus, secret_code)).to eq('++')
+    end
+
+    it '++++' do
+      subject.instance_variable_set(:@user_code, [1, 2, 3, 4])
+      secret_code = [1, 2, 3, 4]
+      expect(subject.send(:count_plus, secret_code)).to eq('++++')
+    end
+  end
+
+  context 'assigns count_minus to' do
+    it '--' do
+      subject.instance_variable_set(:@user_code, [6, 5, 1, 2])
+      secret_code = [5, 6, 4, 3]
+      expect(subject.send(:count_minus, secret_code)).to eq('--')
+    end
+
+    it '-' do
+      subject.instance_variable_set(:@user_code, [2, 5, 4, 3])
+      secret_code = [6, 4, 1, 1]
+      expect(subject.send(:count_minus, secret_code)).to eq('-')
+    end
+
+    it '----' do
+      subject.instance_variable_set(:@user_code, [6, 5, 4, 3])
+      secret_code = [3, 4, 5, 6]
+      expect(subject.send(:count_minus, secret_code)).to eq('----')
+    end
+
+    it '---' do
+      subject.instance_variable_set(:@user_code, [1, 2, 3, 5])
+      secret_code = [3, 1, 2, 4]
+      expect(subject.send(:count_minus, secret_code)).to eq('---')
+    end
+  end
+
   context 'assigns round_result to' do
+    it '++--' do
+      subject.instance_variable_set(:@user_code, [6, 5, 4, 3])
+      subject.instance_variable_set(:@secret_code, [5, 6, 4, 3])
+      expect(subject.game_result).to eq('++--')
+    end
+
+    it '+-' do
+      subject.instance_variable_set(:@user_code, [6, 5, 4, 3])
+      subject.instance_variable_set(:@secret_code, [6, 4, 1, 1])
+      expect(subject.game_result).to eq('+-')
+    end
+
+    it '+++' do
+      subject.instance_variable_set(:@user_code, [6, 5, 4, 3])
+      subject.instance_variable_set(:@secret_code, [6, 5, 4, 4])
+      expect(subject.game_result).to eq('+++')
+    end
+
+    it '----' do
+      subject.instance_variable_set(:@user_code, [6, 5, 4, 3])
+      subject.instance_variable_set(:@secret_code, [3, 4, 5, 6])
+      expect(subject.game_result).to eq('----')
+    end
+
+    it '+' do
+      subject.instance_variable_set(:@user_code, [6, 5, 4, 3])
+      subject.instance_variable_set(:@secret_code, [6, 6, 6, 6])
+      expect(subject.game_result).to eq('+')
+    end
+
+    it '-' do
+      subject.instance_variable_set(:@user_code, [6, 5, 4, 3])
+      subject.instance_variable_set(:@secret_code, [2, 6, 6, 6])
+      expect(subject.game_result).to eq('-')
+    end
+
+    it '' do
+      subject.instance_variable_set(:@user_code, [6, 5, 4, 3])
+      subject.instance_variable_set(:@secret_code, [2, 2, 2, 2])
+      expect(subject.game_result).to eq('')
+    end
+
+    it '++' do
+      subject.instance_variable_set(:@user_code, [6, 6, 6, 6])
+      subject.instance_variable_set(:@secret_code, [1, 6, 6, 1])
+      expect(subject.game_result).to eq('++')
+    end
+
+    it '+---' do
+      subject.instance_variable_set(:@user_code, [1, 2, 3, 4])
+      subject.instance_variable_set(:@secret_code, [3, 1, 2, 4])
+      expect(subject.game_result).to eq('+---')
+    end
+
+    it '++-' do
+      subject.instance_variable_set(:@user_code, [1, 2, 3, 4])
+      subject.instance_variable_set(:@secret_code, [1, 5, 2, 4])
+      expect(subject.game_result).to eq('++-')
+    end
+
+    it '++++' do
+      subject.instance_variable_set(:@user_code, [1, 2, 3, 4])
+      subject.instance_variable_set(:@secret_code, [1, 2, 3, 4])
+      expect(subject.game_result).to eq('++++')
+    end
+
     it '-' do
       subject.instance_variable_set(:@user_code, [2, 2, 2, 4])
       subject.instance_variable_set(:@secret_code, [1, 4, 1, 1])

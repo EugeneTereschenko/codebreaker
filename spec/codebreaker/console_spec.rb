@@ -91,4 +91,37 @@ RSpec.describe Codebreaker::Console do
       subject.round_game
     end
   end
+
+  context 'message' do
+    it 'message' do
+      expect(subject).to receive(:puts).with("Welcome to game Codebreaker\n")
+      subject.send(:message, :start_game)
+    end
+  end
+
+  context 'read from console' do
+    it 'read from console' do
+      expect(subject).to receive_message_chain(:gets, :chomp)
+      subject.send(:read_from_console)
+    end
+  end
+
+  context 'enter name' do
+    it 'enter name' do
+      expect(subject).to receive(:read_from_console)
+      allow(game).to receive(:enter_name) { 0 }
+      subject.instance_variable_set(:@game, game)
+      subject.send(:enter_name)
+    end
+  end
+
+  context 'message_game_read_console' do
+    it 'message_game_read_console' do
+      expect(subject).to receive(:read_from_console)
+      allow(game).to receive(:attempts) { 0 }
+      allow(game).to receive(:hints) { 0 }
+      subject.instance_variable_set(:@game, game)
+      subject.send(:message_game_read_console)
+    end
+  end
 end
